@@ -11,7 +11,7 @@ router.get('/haja', function (req, res, next) {
 });
 
 router.get('/hajayo', function (req, res, next) {
-  res.json({ name: 'haha', age: '??' });
+  res.json({ name: 'minjeong', message: '😘😘😘😘😘😘😘😘😘' });
 });
 
 module.exports = router;
