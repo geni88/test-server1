@@ -7,7 +7,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/haja', function (req, res, next) {
-  res.send('haha');
+  res.send('min jeong  😘😘😘😘😘😘 난 내일 출장이야!!!!!!');
 });
 
 router.get('/hajayo', function (req, res, next) {
