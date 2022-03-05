@@ -97,11 +97,11 @@ router.get('/me/profile', isLoggedin, async (req, res, next) => {
 });
 
 router.get('/haja', function (req, res, next) {
-  res.send('😘😘😘😘😘😘 난 내일 출장이야!!!!!!');
+  res.send('😘😘😘😘😘😘 !!!!!!');
 });
 
 router.get('/hajayo', function (req, res, next) {
-  res.json({ name: 'j', message: '😘😘😘😘😘😘😘😘😘' });
+  res.json({ name: 'jjjj', message: '😘😘😘😘😘😘😘😘😘' });
 });
 
 module.exports = router;
