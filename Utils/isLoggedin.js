@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-
 const isLoggedin = async (req, res, next) => {
     const token = req.headers.authorization;
     try {
@@ -11,7 +10,6 @@ const isLoggedin = async (req, res, next) => {
     } catch (err) {
         return res.json({ status: 401, msg: '권한없음!' })
     }
-
 }
 
 module.exports = isLoggedin;

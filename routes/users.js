@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
+// npm install crypto --save(비번 암호화)
 const crypto = require('crypto');
+//npm install jsonwebtoken --save
 const jwt = require('jsonwebtoken');
 
 require('dotenv').config();
@@ -55,7 +57,25 @@ router.post('/login', async (req, res, next) => {
       return res.json({ status: 401, msg: '비밀번호 오류' })
     }
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET)
+    // res.cookie('token', token, { httpOnly: true, secure: true });
+    // 'http://adfdf.com/hello?token=' + document.cookie.token;
     res.json({ status: 201, token: token });
+  } catch (err) {
+    console.log(err);
+    res.json({ status: 500, msg: '서버에러!' })
+  }
+
+});
+
+router.get('/profile', async (req, res, next) => {
+  try {
+    const token = req.headers.authorization;
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+
+    const connection = await pool.getConnection();
+    const [results] = await connection.query('SELECT * FROM USER_TB');
+    connection.release();
+    res.json({ status: 200, arr: results });
   } catch (err) {
     console.log(err);
     res.json({ status: 500, msg: '서버에러!' })
@@ -77,11 +97,11 @@ router.get('/me/profile', isLoggedin, async (req, res, next) => {
 });
 
 router.get('/haja', function (req, res, next) {
-  res.send('😘😘😘😘😘😘 난 내일 출장이야!!!!!!');
+  res.send('😘😘😘😘😘😘 !!!!!!');
 });
 
 router.get('/hajayo', function (req, res, next) {
-  res.json({ name: 'j', message: '😘😘😘😘😘😘😘😘😘' });
+  res.json({ name: 'jjjj', message: '😘😘😘😘😘😘😘😘😘' });
 });
 
 module.exports = router;
