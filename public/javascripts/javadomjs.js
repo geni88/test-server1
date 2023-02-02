@@ -337,6 +337,8 @@ function displayGonsiga(pnu) {
         alert('XMLHTTP 인스턴스를 만들 수가 없어요 ㅠㅠ');
         return false;
     }
+    const date = new Date();
+    const gongsiYear = date.getFullYear() - 1;
     httpRequest.onreadystatechange = alertContents;
     // url = 'http://apis.data.go.kr/1611000/nsdi/IndvdLandPriceService/attr/getIndvdLandPriceAttr?ServiceKey=DCGCLKgxkKvdE%2F%2F3NNZJoNkacYaV%2BJ110w%2B1qi%2Bd9kWwYunxWXyWGJOfTNIZu6q1sqaeBm5p7b6uZQsxaNmqgw%3D%3D&pnu=1111017700102110000&stdrYear=2015&format=xml&numOfRows=10&pageNo=1'
     //토지특성정보 api
@@ -345,7 +347,7 @@ function displayGonsiga(pnu) {
     // var urlData = 'http://apis.data.go.kr/1611000/nsdi/IndvdLandPriceService/attr/getIndvdLandPriceAttr';
     var serviceKey = "serviceKey=" + "DCGCLKgxkKvdE%2F%2F3NNZJoNkacYaV%2BJ110w%2B1qi%2Bd9kWwYunxWXyWGJOfTNIZu6q1sqaeBm5p7b6uZQsxaNmqgw%3D%3D";
     var pnuV = "&pnu=" + pnu;
-    var stdrYear = "&stdrYear=" + 2020;
+    var stdrYear = "&stdrYear=" + gongsiYear;
     var format = "&format=" + 'json'; //xml, json 형식 변경 가능
     var numOfRows = "&numOfRows=" + 10;
     var pageNo = "&pageNo=" + 1;
@@ -356,7 +358,6 @@ function displayGonsiga(pnu) {
     httpRequest.open('GET', url, true);
     httpRequest.send();
     // }
-
     var gongsigaJson = new Array();
     function alertContents() {
         try {

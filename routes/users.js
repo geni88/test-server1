@@ -7,6 +7,7 @@ require('dotenv').config();
 
 const pool = require('../Utils/mysql');
 const isLoggedin = require('../Utils/isLoggedin');
+const { join } = require('path');
 
 /* GET users listing. */
 router.get('/', async (req, res, next) => {
