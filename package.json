@@ -4,13 +4,16 @@
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www",
-    "lint": "node_modules/.bin/eslint app.js"
+    "lint": "node_modules/.bin/eslint app.js",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint"
     }
   },
+  "homepages": "https://github.com/geni88/test-server1.git",
   "dependencies": {
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
