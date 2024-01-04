@@ -1,5 +1,5 @@
 var express = require('express');
-const home = require('../public/javascripts/javadomjs.js');
+const home = require('../public/index.html');
 var router = express.Router();
 
 /* GET home page. */
