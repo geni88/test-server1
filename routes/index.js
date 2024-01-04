@@ -1,10 +1,10 @@
 var express = require('express');
-// const gongsidata = require('../public/javascripts/multigongsi');
+const home = require('../public/javascripts/javadom.js');
 var router = express.Router();
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('home');
 });
 
 // router.post('/gongsi', (req, res, next) => {
