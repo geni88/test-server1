@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  res.render('index',{thisis : "reacthomepage"});
+  res.render('index',{title : "reacthomepage"});
 });
 
 // router.post('/gongsi', (req, res, next) => {
