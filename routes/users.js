@@ -9,6 +9,7 @@ require('dotenv').config();
 
 const pool = require('../Utils/mysql');
 const isLoggedin = require('../Utils/isLoggedin');
+const { mkdirSync } = require('fs');
 
 /* GET users listing. */
 router.get('/', async (req, res, next) => {
@@ -21,7 +22,7 @@ router.get('/', async (req, res, next) => {
     console.log(err);
     res.json({ status: 500, msg: '서버에러!' })
   }
-
+ 
 });
 
 router.post('/', async (req, res, next) => {
@@ -46,11 +47,13 @@ router.post('/login', async (req, res, next) => {
     const email = req.body.email;
     const pwd = req.body.pwd;
     const connection = await pool.getConnection();
+
     const [users] = await connection.query('SELECT * FROM USER_TB WHERE email = ?', [email]);
     connection.release();
     if (users.length === 0) {
       return res.json({ status: 401, msg: '없는 이메일!' })
     }
+
     const user = users[0];
     const hashedPwd = (crypto.pbkdf2Sync(pwd, user.pwd_salt, 100000, 64, 'SHA512')).toString('base64');
     if (hashedPwd !== user.hashed_pwd) {
