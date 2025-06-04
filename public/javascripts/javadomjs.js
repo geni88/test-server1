@@ -1,10 +1,9 @@
-import {seSchoolData, seSchoolCoords, seAparts} from "./seoulSchool.js";
-import * as XLSX from '../node_modules/xlsx/xlsx.mjs';
-// import fs from 'fs';
+// import {seSchoolData, seSchoolCoords, seAparts} from "./seoulSchool.js";
+// import * as XLSX from '../node_modules/xlsx/xlsx.mjs';
 
 // import { rejects } from "assert";
 // import { resolve } from "path";
-console.log(seSchoolData[1]);
+// console.log(seSchoolData[1]);
 var mapContainer = document.getElementById("map"), // 지도를 표시할 div
   mapOption = {
     center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
@@ -63,13 +62,13 @@ setMarkers(map)
 function hideMarkers() {
 setMarkers(null);
 }
-*/
+
 
 var geocoder = new kakao.maps.services.Geocoder();
 
 var marker = new kakao.maps.Marker(), // 클릭한 위치를 표시할 마커입니다
   infowindow = new kakao.maps.InfoWindow({ zindex: 1 }); // 클릭한 위치에한 주소를 표시할 인포윈도우입니다
-
+*/
 //주소검색 입력값을 받고 주소검색.
 /* function searchAdress(callback) {
 	var adressInfo = document.seeAdress.sawAdress.value;
@@ -84,12 +83,100 @@ var marker = new kakao.maps.Marker(), // 클릭한 위치를 표시할 마커입
 };
 searchAdress(searchAdressInfo); */
 
-// 마커 클러스터러를 생성합니다
-const clusterer = new kakao.maps.MarkerClusterer({
-  map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체
-  averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
-  minLevel: 8, // 클러스터 할 최소 지도 레벨
-});
+fetch('apt_data.json')
+  .then(res => res.json())
+  .then(apartments => {
+    const colorSet = [
+      '#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4',
+      '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff',
+      '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1',
+      '#000075', '#808080', '#ffffff', '#000000', '#ff7f00', '#4daf4a',
+      '#377eb8', '#984ea3', '#ff69b4', '#a65628', '#f781bf', '#999999'
+    ];
+
+    const clusterMap = {};     // cluster 번호 → 마커 배열
+    const clusterers = {};     // cluster 번호 → 클러스터러
+
+    // 마커 생성 및 그룹화
+    apartments.forEach(apt => {
+      const clusterNum = typeof apt.cluster === 'number' ? apt.cluster : 0;
+      const color = colorSet[clusterNum % colorSet.length] || '#000000';
+      const position = new kakao.maps.LatLng(apt.lat, apt.lng);
+
+      const markerImage = new kakao.maps.MarkerImage(
+        `https://dummyimage.com/20x20/${color.replace('#', '')}/ffffff.png&text=+`,
+        new kakao.maps.Size(20, 20)
+      );
+
+      const marker = new kakao.maps.Marker({
+        position: position,
+        image: markerImage
+      });
+
+      // 마커 그룹에 추가
+      if (!clusterMap[clusterNum]) clusterMap[clusterNum] = [];
+      clusterMap[clusterNum].push(marker);
+
+      // 지도에 원 추가 (선택)
+      new kakao.maps.Circle({
+        center: position,
+        radius: 40,
+        strokeWeight: 1,
+        strokeColor: color,
+        strokeOpacity: 0.8,
+        fillColor: color,
+        fillOpacity: 0.3,
+        map: map
+      });
+
+      // 마우스 오버 시 정보창
+      const infowindow = new kakao.maps.InfoWindow({
+        content: `<div style="padding:5px;">${apt.apt_name}<br>${apt.address}</div>`
+      });
+
+      kakao.maps.event.addListener(marker, 'mouseover', () => infowindow.open(map, marker));
+      kakao.maps.event.addListener(marker, 'mouseout', () => infowindow.close());
+    });
+
+    // 클러스터러 생성 및 마커 등록
+    Object.entries(clusterMap).forEach(([clusterNum, markers]) => {
+      const color = colorSet[clusterNum % colorSet.length].replace('#', '');
+    
+      const clusterer = new kakao.maps.MarkerClusterer({
+        map: map,
+        averageCenter: true,
+        minLevel: 8,
+        styles: [{
+          width: '40px',
+          height: '40px',
+          background: `linear-gradient(145deg, #${color}, #ffffff)`,
+          color: '#000',
+          textAlign: 'center',
+          lineHeight: '40px',
+          borderRadius: '20px',
+          boxShadow: '2px 2px 6px rgba(0,0,0,0.3)',
+          fontWeight: 'bold'
+        }]
+      });
+    
+      clusterer.addMarkers(markers);
+      clusterers[clusterNum] = clusterer;
+    });
+
+    // 버튼으로 마커 숨기기 / 보이기
+    document.getElementById('showMarkers').addEventListener('click', () => {
+      Object.entries(clusterMap).forEach(([clusterNum, markers]) => {
+        clusterers[clusterNum].addMarkers(markers);
+      });
+    });
+
+    document.getElementById('hideMarkers').addEventListener('click', () => {
+      Object.values(clusterers).forEach(clusterer => clusterer.clear());
+    });
+  })
+  .catch(err => {
+    console.error('❌ JSON 파일 로딩 실패:', err);
+  });
 // 학교좌표 배열로 만들기
 const schoolLatLng = [];
 const seSchoolDataCoord =[];

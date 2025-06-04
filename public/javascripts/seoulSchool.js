@@ -1589,7 +1589,7 @@ const seAparts = ["자하문로33길 43",
   "후암로34길 31-17"]
   
    // SQL 파일 생성 함수
-  function saveSqlToFile(sqlContent, sqlFileName) {
+function saveSqlToFile(sqlContent, sqlFileName) {
   // 데이터베이스 폴더 경로 (프로젝트 구조에 맞게 조정)
   const dbFolderPath = path.join(__dirname, '../../database');
   
