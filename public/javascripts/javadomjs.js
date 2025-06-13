@@ -128,14 +128,40 @@ fetch('apt_data_v2.json')
         fillOpacity: 0.3,
         map: map
       });
-
       // 마우스 오버 시 정보창
-      const infowindow = new kakao.maps.InfoWindow({
-        content: `<div style="padding:5px;">${apt.apartment_name}<br>${apt.주소}<br>${apt.gcn_class}</div>`
-      });
+      // 공용 InfoWindow
+      const infowindow = new kakao.maps.InfoWindow();
 
-      kakao.maps.event.addListener(marker, 'mouseover', () => infowindow.open(map, marker));
-      kakao.maps.event.addListener(marker, 'mouseout', () => infowindow.close());
+      // 현재 열려 있는 마커 저장 변수
+      let currentOpenMarker = null;
+
+      kakao.maps.event.addListener(marker, 'click', function () {
+        // 같은 마커를 다시 클릭한 경우 → 닫기
+        if (currentOpenMarker === marker) {
+          infowindow.close();
+          currentOpenMarker = null;
+        } else {
+          // 다른 마커 클릭 시 내용 업데이트 및 열기
+          infowindow.setContent(`
+            <div style="
+              width: 220px;
+              max-height: 150px;
+              overflow-y: auto;
+              white-space: normal;
+              word-break: keep-all;
+              box-sizing: border-box;
+            ">
+              ${apt.apartment_name}<br>
+              ${apt.주소}<br>
+              <strong>클래스명:</strong> ${apt.gcn_class}
+            </div>
+          `);
+          infowindow.open(map, marker);
+          currentOpenMarker = marker; // 현재 열린 마커 업데이트
+        }
+});
+      // kakao.maps.event.addListener(marker, 'mouseenter', () => infowindow.open(map, marker));
+      // kakao.maps.event.addListener(marker, 'mouseleave', () => infowindow.close());
     });
 
     // 클러스터러 생성 및 마커 등록
