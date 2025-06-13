@@ -83,7 +83,7 @@ var marker = new kakao.maps.Marker(), // 클릭한 위치를 표시할 마커입
 };
 searchAdress(searchAdressInfo); */
 
-fetch('apt_data.json')
+fetch('apt_data_v2.json')
   .then(res => res.json())
   .then(apartments => {
     const colorSet = [
@@ -91,7 +91,7 @@ fetch('apt_data.json')
       '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff',
       '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1',
       '#000075', '#808080', '#ffffff', '#000000', '#ff7f00', '#4daf4a',
-      '#377eb8', '#984ea3', '#ff69b4', '#a65628', '#f781bf', '#999999'
+      '#377eb8', '#984ea3', '#ff69b4', '#a65628', '#f781bf'
     ];
 
     const clusterMap = {};     // cluster 번호 → 마커 배열
@@ -99,7 +99,7 @@ fetch('apt_data.json')
 
     // 마커 생성 및 그룹화
     apartments.forEach(apt => {
-      const clusterNum = typeof apt.cluster === 'number' ? apt.cluster : 0;
+      const clusterNum = typeof apt.gcn_class === 'number' ? apt.gcn_class : 0;
       const color = colorSet[clusterNum % colorSet.length] || '#000000';
       const position = new kakao.maps.LatLng(apt.lat, apt.lng);
 
@@ -131,7 +131,7 @@ fetch('apt_data.json')
 
       // 마우스 오버 시 정보창
       const infowindow = new kakao.maps.InfoWindow({
-        content: `<div style="padding:5px;">${apt.apt_name}<br>${apt.address}</div>`
+        content: `<div style="padding:5px;">${apt.aptment_name}<br>${apt.주소}<br>${apt.gcn_class}</div>`
       });
 
       kakao.maps.event.addListener(marker, 'mouseover', () => infowindow.open(map, marker));
