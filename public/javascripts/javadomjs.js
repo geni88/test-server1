@@ -131,7 +131,7 @@ fetch('apt_data_v2.json')
 
       // 마우스 오버 시 정보창
       const infowindow = new kakao.maps.InfoWindow({
-        content: `<div style="padding:5px;">${apt.aptment_name}<br>${apt.주소}<br>${apt.gcn_class}</div>`
+        content: `<div style="padding:5px;">${apt.apartment_name}<br>${apt.주소}<br>${apt.gcn_class}</div>`
       });
 
       kakao.maps.event.addListener(marker, 'mouseover', () => infowindow.open(map, marker));
